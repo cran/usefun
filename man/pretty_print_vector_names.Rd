@@ -4,8 +4,12 @@
 \alias{pretty_print_vector_names}
 \title{Pretty printing of a vector's names attribute}
 \usage{
-pretty_print_vector_names(vec, vector.names.str = "nodes", sep = ", ",
-  with.gt = TRUE)
+pretty_print_vector_names(
+  vec,
+  vector.names.str = "nodes",
+  sep = ", ",
+  with.gt = TRUE
+)
 }
 \arguments{
 \item{vec}{vector}
@@ -18,7 +22,8 @@ vector (use plural form) in order to fill the print message. Default value:
 the names values. Default value: ", ".}
 
 \item{with.gt}{logical. Determines if the ">" sign will be appended for nice
-printing in an R notebook. Default value: TRUE.}
+printing in an R notebook (use with the chuck option \emph{results = 'asis'}).
+Default value: TRUE.}
 }
 \description{
 Pretty printing of a vector's names attribute

@@ -1,3 +1,12 @@
+# usefun 0.4.3
+
+- Added function `binarize_to_thres` for converting a matrix to a binary one based on a given threshold
+- Renamed function `get_average_over_unique_values` to `get_stats_for_unique_values` and changed it's returned object class to a data.frame
+
+# usefun 0.4.2
+
+- Added better documentation for the `pretty_print*` functions
+
 # usefun 0.4.1
 
 - Improved `get_percentage_of_matches` handling of NA and NaN values

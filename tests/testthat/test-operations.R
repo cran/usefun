@@ -30,7 +30,7 @@ test_that("it returns proper results", {
   sink()
 })
 
-context("Testing 'get_average_over_unique_values'")
+context("Testing 'get_stats_for_unique_values'")
 
 test_that("it returns proper results when there is a unique value in vec1", {
   vec1 = c(rep(1,10))
@@ -39,11 +39,11 @@ test_that("it returns proper results when there is a unique value in vec1", {
   names(vec1) = names.vec
   names(vec2) = names.vec
 
-  res = get_average_over_unique_values(vec1, vec2)
+  res = get_stats_for_unique_values(vec1, vec2)
   expected.res = cbind(1,2,0)
   colnames(expected.res) = c("vec1.unique", "vec2.mean", "vec2.sd")
 
-  expect_equal(res, expected.res)
+  expect_equal(res, as.data.frame(expected.res))
 })
 
 test_that("it returns proper results when there are 2 unique values in vec1", {
@@ -53,11 +53,11 @@ test_that("it returns proper results when there are 2 unique values in vec1", {
   names(vec1) = names.vec
   names(vec2) = names.vec
 
-  res = get_average_over_unique_values(vec1, vec2)
+  res = get_stats_for_unique_values(vec1, vec2)
   expected.res = cbind(c(1,2), c(2.4, 2.6), c(0.5477226, 0.5477226))
   colnames(expected.res) = c("vec1.unique", "vec2.mean", "vec2.sd")
 
-  expect_equal(res, expected.res, tolerance = .0000001)
+  expect_equal(res, as.data.frame(expected.res), tolerance = .0000001)
 })
 
 test_that(paste("it returns proper results when there are ",
@@ -68,11 +68,11 @@ test_that(paste("it returns proper results when there are ",
   names(vec1) = names.vec
   names(vec2) = names.vec
 
-  res = get_average_over_unique_values(vec1, vec2)
+  res = get_stats_for_unique_values(vec1, vec2)
   expected.res = cbind(c(1,2,3), c(20,5,2.5), c(0,4.2426407,0))
   colnames(expected.res) = c("vec1.unique", "vec2.mean", "vec2.sd")
 
-  expect_equal(res, expected.res, tolerance = .00000001)
+  expect_equal(res, as.data.frame(expected.res), tolerance = .00000001)
 })
 
 context("Testing 'get_percentage_of_matches'")
@@ -281,4 +281,22 @@ test_that("it returns proper results", {
                as.numeric(list_df[["zeros"]]["row1", ]))
   expect_equal(as.numeric(res_list_df[["row2"]]["ones", ]),
                as.numeric(list_df[["ones"]]["row2", ]))
+})
+
+context("Testing 'binarize_to_thres'")
+
+test_that("it returns proper results", {
+  mat = matrix(data = -4:4, nrow = 3, ncol = 3)
+
+  expected.mat.1 = matrix(data = c(1,1,1,1,0,1,1,1,1), nrow = 3, ncol = 3)
+  expected.mat.2 = matrix(data = c(1,1,1,0,0,0,1,1,1), nrow = 3, ncol = 3)
+  expected.mat.3 = matrix(data = c(1,1,0,0,0,0,0,1,1), nrow = 3, ncol = 3)
+  expected.mat.4 = matrix(data = c(1,0,0,0,0,0,0,0,1), nrow = 3, ncol = 3)
+  expected.mat.5 = matrix(data = 0, nrow = 3, ncol = 3)
+
+  expect_equal(binarize_to_thres(mat, thres = 0.5), expected.mat.1)
+  expect_equal(binarize_to_thres(mat, thres = 1.5), expected.mat.2)
+  expect_equal(binarize_to_thres(mat, thres = 2.5), expected.mat.3)
+  expect_equal(binarize_to_thres(mat, thres = 3.5), expected.mat.4)
+  expect_equal(binarize_to_thres(mat, thres = 5), expected.mat.5)
 })

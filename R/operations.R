@@ -8,7 +8,8 @@
 #' @param vector.names.str string. Used for printing, it tell us what are the
 #' \code{names} of the two vectors (use plural form). Default value: "nodes".
 #' @param with.gt logical. Determines if the ">" sign will be appended for nice
-#' printing in an R notebook. Default value: TRUE.
+#' printing in an R notebook (use with the chuck option \emph{results = 'asis'}).
+#' Default value: TRUE.
 #'
 #' @return the character vector of the common names. If there is only one name
 #' in common, the \code{vector.names.str} gets the last character stripped for
@@ -52,7 +53,8 @@ get_common_names = function(vec1, vec2, vector.names.str = "nodes",
 #' @param vector.values.str string. Used for printing, it tell us what are the
 #' values of the two vectors (use plural form). Default value: "nodes".
 #' @param with.gt logical. Determines if the ">" sign will be appended for nice
-#' printing in an R notebook. Default value: TRUE.
+#' printing in an R notebook (use with the chuck option \emph{results = 'asis'}).
+#' Default value: TRUE.
 #'
 #' @return the vector of the common values. If there is only one value
 #' in common, the \code{vector.values.str} gets the last character stripped for
@@ -83,7 +85,7 @@ get_common_values = function(vec1, vec2, vector.values.str = "nodes",
   }
 }
 
-#' Get average over unique values
+#' Get stats for unique values
 #'
 #' Use this function on two vectors with same \code{names} attribute (column
 #' names), to find for each unique (numeric) value of the first vector, the
@@ -93,8 +95,8 @@ get_common_values = function(vec1, vec2, vector.values.str = "nodes",
 #' @param vec1 vector with \code{names} attribute
 #' @param vec2 vector with \code{names} attribute
 #'
-#' @return A \code{matrix} consisting of 3 column vectors. The matrix size is
-#' \code{dim(matrix)= 3xn}, where n is the number of unique values of \code{vec1}).
+#' @return A \code{data.frame} consisting of 3 column vectors. The \code{data.frame}
+#' size is \code{nx3}, where n is the number of unique values of \code{vec1} (rows).
 #' The columns vectors are:
 #'   \enumerate{
 #'     \item the first input vector pruned to its unique values
@@ -111,11 +113,11 @@ get_common_values = function(vec1, vec2, vector.values.str = "nodes",
 #' names(vec1) = names.vec
 #' names(vec2) = names.vec
 #'
-#' res = get_average_over_unique_values(vec1, vec2)
+#' res = get_stats_for_unique_values(vec1, vec2)
 #'
 #' @importFrom stats sd
 #' @export
-get_average_over_unique_values = function(vec1, vec2) {
+get_stats_for_unique_values = function(vec1, vec2) {
   stopifnot(names(vec1) == names(vec2))
 
   vec1.sorted = sort(vec1)
@@ -141,7 +143,7 @@ get_average_over_unique_values = function(vec1, vec2) {
   res = cbind(vec1.sorted.unique, vec2.avg.values, sd.values)
   colnames(res) = c("vec1.unique", "vec2.mean", "vec2.sd")
 
-  return(res)
+  return(as.data.frame(res))
 }
 
 #' Get percentage of matches between two vectors
@@ -428,4 +430,32 @@ ldf_arrange_by_rownames = function(list_df) {
   }
 
   return(res)
+}
+
+#' Binarize matrix to given threshold
+#'
+#' Simple function that checks every element of a given matrix (or data.frame)
+#' if it surpasses the given threshold either positively or negatively and it
+#' outputs 1 for that element, otherwise 0.
+#'
+#' @param mat a matrix or data.frame object
+#' @param thres a positive numerical value
+#'
+#' @return a binarized matrix (values either 0 or 1): elements that have 1
+#' correspond to values of \code{mat} that they were either larger than the
+#' threshold or smaller than it's negative.
+#'
+#' @examples
+#'
+#' mat = matrix(data = -4:4, nrow = 3, ncol = 3)
+#' binarize_to_thres(mat, thres = 0.5)
+#' binarize_to_thres(mat, thres = 2.5)
+#'
+#' @export
+binarize_to_thres = function(mat, thres) {
+  stopifnot(is.data.frame(mat) | is.matrix(mat))
+  stopifnot(thres > 0)
+  apply(mat, c(1,2), function(x) {
+    if (x >= thres | x <= -thres) 1 else 0
+  })
 }

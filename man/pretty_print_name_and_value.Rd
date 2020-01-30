@@ -4,8 +4,7 @@
 \alias{pretty_print_name_and_value}
 \title{Pretty print a name and value}
 \usage{
-pretty_print_name_and_value(name, value, with.gt = FALSE,
-  with.comma = TRUE)
+pretty_print_name_and_value(name, value, with.gt = FALSE, with.comma = TRUE)
 }
 \arguments{
 \item{name}{string}
@@ -13,7 +12,8 @@ pretty_print_name_and_value(name, value, with.gt = FALSE,
 \item{value}{string}
 
 \item{with.gt}{logical. Determines if the ">" sign will be appended for nice
-printing in an R notebook. Default value: FALSE.}
+printing in an R notebook (use with the chuck option \emph{results = 'asis'}).
+Default value: FALSE.}
 
 \item{with.comma}{logical. Determines if the comma (,) character will be
 appended to the end of the output. Default value: TRUE.}
